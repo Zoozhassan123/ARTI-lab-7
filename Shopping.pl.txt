@@ -1,0 +1,50 @@
+
+% Shopping Program
+
+:- dynamic basket/1.
+
+basket([coffee, milk, chocolate, apple, juice]).
+
+main :-
+    menu.
+
+menu :-
+    nl,
+    write('** SHOPPING LIST **'), nl,
+    write('d. display all items.'), nl,
+    write('a. Add an item to the list.'), nl,
+    write('e. exit.'), nl,
+    write('ENTER YOUR CHOICE: '),
+    read(Choice),
+    handle_choice(Choice).
+
+handle_choice(d) :-
+    basket(Items),
+    display_items(Items),
+    menu.
+
+handle_choice(a) :-
+    write('Enter the item you want to add: '),
+    read(Item),
+    basket(Items),
+    append(Items, [Item], UpdatedItems),
+    retract(basket(Items)),
+    assertz(basket(UpdatedItems)),
+    write('The item has been added.'), nl,
+    menu.
+
+handle_choice(e) :-
+    write('Goodbye!'), nl.
+
+handle_choice(_) :-
+    write('Invalid choice. Please try again.'), nl,
+    menu.
+
+% Recursive predicate to display items
+display_items([]).
+
+display_items([Item | Rest]) :-
+    write(Item), nl,
+    display_items(Rest).
+
+:- initialization(main).
